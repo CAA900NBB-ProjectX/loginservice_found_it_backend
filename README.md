@@ -1,17 +1,13 @@
 # Login Service
 
-Project Setup Guide
+# Setup Guide
 
-## Prerequisites
+## Install PostgreSQL
+1. Download and install PostgreSQL from [official website](https://www.postgresql.org/download/).
+2. Open pgAdmin and create a database named **foundit**.
 
-1. Install **PostgreSQL**
-
-   - Download and install PostgreSQL from [here](https://www.postgresql.org/download/).
-   - Ensure `pgAdmin` is installed as well.
-
-2. Open **pgAdmin** and create a database named `foundit`.
-
-3. To create the `users` table, use the following SQL query:
+## Create Users Table
+Run the following SQL command to create the `users` table:
 
 ```sql
 CREATE TABLE users(  
@@ -25,46 +21,44 @@ CREATE TABLE users(
 );
 ```
 
-4. Install **IntelliJ IDEA Community Edition**
+## Install IntelliJ IDEA Community Edition
+Download and install [IntelliJ IDEA Community Edition](https://www.jetbrains.com/idea/download/).
 
-   - Download and install from [here](https://www.jetbrains.com/idea/download/).
+## Install Oracle Java SDK 23
+Download and install Oracle Java SDK 23 from [Oracle's official website](https://www.oracle.com/java/technologies/javase/jdk23-archive-downloads.html).
 
-5. Install **Oracle Java SDK 23**
+## Checkout the Code
+Clone the repository using Git:
+```sh
+git clone <repository-url>
+cd <repository-folder>
+```
 
-   - Download and install from [here](https://www.oracle.com/java/technologies/javase/jdk23-archive-downloads.html).
+## Configure Environment Variables
+Create a `.env` file in the project root and add the following parameters:
+```sh
+SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/foundit
+SPRING_DATASOURCE_USERNAME=<DB User>
+SPRING_DATASOURCE_PASSWORD=<DB Password>
 
-## Project Setup
+JWT_SECRET_KEY=<64Bit or 256 bit JWT Secret key - Use a JWT key generator>
 
-1. Clone the repository:
+SUPPORT_EMAIL=<Email service email>
+APP_PASSWORD=<16 character long app password - see instructions below>
+```
 
-   ```sh
-   git clone <repository-url>
-   cd <repository-folder>
-   ```
+## Generate App Password
+If you are using Gmail, follow these steps to generate a 16-character app password:
+1. Go to [Google Account Security](https://myaccount.google.com/security).
+2. Enable 2-Step Verification if not already enabled.
+3. Click on **App passwords** under the "Signing in to Google" section.
+4. Generate a new password and copy it to use in `APP_PASSWORD`.
 
-2. Create a `.env` file in the project root and add the following parameters:
+## Install Postman
+Download and install [Postman](https://www.postman.com/downloads/).
 
-   ```ini
-   SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/foundit
-   SPRING_DATASOURCE_USERNAME=<DB User>
-   SPRING_DATASOURCE_PASSWORD=<DB Password>
-
-   JWT_SECRET_KEY=<64Bit or 256Bit JWT Secret key - Use a JWT key generator>
-
-   SUPPORT_EMAIL=<Email service email>
-   APP_PASSWORD=<16 character long app password>
-   ```
-
-## How to Generate an App Password
-
-If your email provider requires an app password:
-
-- For **Google accounts**:
-  1. Go to [Google App Passwords](https://myaccount.google.com/apppasswords).
-  2. Generate a new 16-character password.
-  3. Use this password in the `.env` file under `APP_PASSWORD`.
-
-For this your gmail account must need to have 2 factor authentication on.
+### Learn How to Setup Requests in Postman
+Watch a tutorial video on how to create and test API requests in Postman: [Postman Tutorial](https://www.youtube.com/watch?v=VywxIQ2ZXw4).
 
 Containerization Will be done later
 
