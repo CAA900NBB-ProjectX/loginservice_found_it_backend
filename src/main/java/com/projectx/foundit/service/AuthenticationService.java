@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
+import static org.springframework.util.ClassUtils.isPresent;
+
 @Service
 public class AuthenticationService {
     private final IUserRepository userRepository;
@@ -30,12 +32,18 @@ public class AuthenticationService {
     }
 
     public User signup(RegisterUserDto input) {
-        User user = new User(input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()));
-        user.setVerificationCode(generateVerificationCode());
-        user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
-        user.setEnabled(false);
-        sendVerificationEmail(user);
-        return userRepository.save(user);
+        Optional<User> exitsUser = userRepository.findByEmail(input.getEmail());
+        if (!exitsUser.isPresent()) {
+            User user = new User(input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()));
+            user.setVerificationCode(generateVerificationCode());
+            user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
+            user.setEnabled(false);
+            sendVerificationEmail(user);
+            return userRepository.save(user);
+        } else {
+            throw new RuntimeException("User is already registered");
+        }
+
     }
 
     public User authenticate(LoginUserDto input){
