@@ -33,7 +33,7 @@ public class AuthenticationService {
 
     public User signup(RegisterUserDto input) {
         Optional<User> exitsUser = userRepository.findByEmail(input.getEmail());
-        if (!exitsUser.isPresent()) {
+        if (exitsUser.isEmpty()) {
             User user = new User(input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()));
             user.setVerificationCode(generateVerificationCode());
             user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
