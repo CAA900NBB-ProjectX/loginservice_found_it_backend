@@ -1,5 +1,6 @@
 package com.projectx.foundit.controllers;
 
+import com.projectx.foundit.config.RabbitMQProducer;
 import com.projectx.foundit.dto.LoginUserDto;
 import com.projectx.foundit.dto.RegisterUserDto;
 import com.projectx.foundit.dto.VerifyUserDto;
@@ -7,11 +8,9 @@ import com.projectx.foundit.model.User;
 import com.projectx.foundit.responses.LoginResponse;
 import com.projectx.foundit.service.AuthenticationService;
 import com.projectx.foundit.service.JwtService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/auth")
 @RestController
@@ -19,9 +18,14 @@ public class AthenticationController {
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
 
-    public AthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
+
+    @Autowired
+    private final RabbitMQProducer producer;
+
+    public AthenticationController(JwtService jwtService, AuthenticationService authenticationService, RabbitMQProducer producer) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
+        this.producer = producer;
     }
 
     @PostMapping("/signup")
@@ -65,5 +69,11 @@ public class AthenticationController {
         } catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PostMapping("/send")
+    public String sendMessage(@RequestParam String message) {
+        producer.sendMessage(message);
+        return "Message sent: " + message;
     }
 }
