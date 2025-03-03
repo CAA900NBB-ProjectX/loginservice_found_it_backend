@@ -26,6 +26,9 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider;
+
     @Column(nullable = false)
     private String password;
 
@@ -37,10 +40,17 @@ public class User implements UserDetails {
     @Column(name = "verification_code_expiry")
     private LocalDateTime verificationCodeExpiresAt;
 
-    public User(String username, String email, String password) {
+    public User(String username, String email, String password, AuthProvider authProvider) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.authProvider = authProvider;
+    }
+
+    public User(String username, String email, AuthProvider authProvider) {
+        this.username = username;
+        this.email = email;
+        this.authProvider = authProvider;
     }
 
     public User(Long id, String username, String email) {
@@ -72,5 +82,9 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public enum AuthProvider {
+        LOCAL, GOOGLE, MICROSOFT
     }
 }

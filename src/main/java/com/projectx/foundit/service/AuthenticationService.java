@@ -6,9 +6,11 @@ import com.projectx.foundit.dto.VerifyUserDto;
 import com.projectx.foundit.model.User;
 import com.projectx.foundit.repository.IUserRepository;
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,7 +36,22 @@ public class AuthenticationService {
     public User signup(RegisterUserDto input) {
         Optional<User> exitsUser = userRepository.findByEmail(input.getEmail());
         if (exitsUser.isEmpty()) {
-            User user = new User(input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()));
+            User user = new User(input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()), User.AuthProvider.LOCAL);
+            user.setVerificationCode(generateVerificationCode());
+            user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
+            user.setEnabled(false);
+            sendVerificationEmail(user);
+            return userRepository.save(user);
+        } else {
+            throw new RuntimeException("User is already registered");
+        }
+
+    }
+
+    public User processOAuthPostLogin(OAuth2User oAuth2User) {
+        Optional<User> exitsUser = userRepository.findByEmail(oAuth2User.getAttribute("email"));
+        if (exitsUser.isEmpty()) {
+            User user = new User(oAuth2User.getAttribute("name"),oAuth2User.getAttribute("email"), User.AuthProvider.GOOGLE);
             user.setVerificationCode(generateVerificationCode());
             user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
             user.setEnabled(false);

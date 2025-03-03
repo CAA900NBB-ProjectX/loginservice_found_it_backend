@@ -23,7 +23,7 @@ public class UserService {
         return users;
     }
 
-    @RabbitListener(queues = "user_request_queue")
+//    @RabbitListener(queues = "user_request_queue")
     @SendTo("user_reply_queue")
     public User handleUserRequest(int userId) {
         // Fetch user details
