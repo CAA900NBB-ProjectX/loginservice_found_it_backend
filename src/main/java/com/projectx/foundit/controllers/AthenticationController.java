@@ -76,4 +76,10 @@ public class AthenticationController {
         producer.sendMessage(message);
         return "Message sent: " + message;
     }
+
+    @PostMapping("/logout")
+    public String logoutUser(@RequestParam String token) {
+        producer.logoutUser(message);
+        return "User Logout";
+    }
 }
