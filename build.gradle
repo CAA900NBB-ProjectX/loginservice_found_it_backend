@@ -13,6 +13,13 @@ java {
 	}
 }
 
+bootJar {
+	archiveBaseName.set("login-service")   // Custom base name
+	archiveVersion.set("1.0.0")    // Custom version (optional)
+	archiveFileName.set("login-service.jar")  // Full custom name
+}
+
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
