@@ -1,9 +1,12 @@
 package com.projectx.foundit.service;
 
+import com.projectx.foundit.Enum.TokenType;
 import com.projectx.foundit.dto.LoginUserDto;
 import com.projectx.foundit.dto.RegisterUserDto;
 import com.projectx.foundit.dto.VerifyUserDto;
+import com.projectx.foundit.model.Token;
 import com.projectx.foundit.model.User;
+import com.projectx.foundit.repository.ITokenRepository;
 import com.projectx.foundit.repository.IUserRepository;
 import jakarta.mail.MessagingException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,12 +26,16 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
+    private final JwtService jwtService;
+    private final ITokenRepository tokenRepository;
 
-    public AuthenticationService(IUserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService) {
+    public AuthenticationService(IUserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService, JwtService jwtService, ITokenRepository tokenRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.emailService = emailService;
+        this.jwtService = jwtService;
+        this.tokenRepository = tokenRepository;
     }
 
     public User signup(RegisterUserDto input) {
@@ -60,6 +67,27 @@ public class AuthenticationService {
                 )
         );
         return user;
+    }
+
+    public String login(LoginUserDto loginUser){
+        User authenticatedUser = authenticate(loginUser);
+        String generateToken = jwtService.generateToken(authenticatedUser);
+        User user = userRepository.findUserByEmail(loginUser.getEmail());
+        Token token = new Token(generateToken, TokenType.BEARER, false, false, user);
+        revokeAllUserTokens(user);
+        tokenRepository.save(token);
+        return generateToken;
+    }
+
+    private void revokeAllUserTokens(User user){
+        var validUserTokens = tokenRepository.findAllValidTokensByUser(user.getId());
+        if(validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(t -> {
+            t.setExpired(true);
+            t.setRevoked(true);
+        });
+            tokenRepository.saveAll(validUserTokens);
     }
 
     public void verifyUser(VerifyUserDto input) {
