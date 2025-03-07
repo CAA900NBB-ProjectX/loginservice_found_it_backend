@@ -37,6 +37,9 @@ public class User implements UserDetails {
     @Column(name = "verification_code_expiry")
     private LocalDateTime verificationCodeExpiresAt;
 
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
+
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
@@ -48,6 +51,8 @@ public class User implements UserDetails {
         this.username = username;
         this.email = email;
     }
+
+
 
     public User() {
     }

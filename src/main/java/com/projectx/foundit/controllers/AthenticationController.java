@@ -1,6 +1,6 @@
 package com.projectx.foundit.controllers;
 
-import com.projectx.foundit.config.RabbitMQProducer;
+//import com.projectx.foundit.config.RabbitMQProducer;
 import com.projectx.foundit.dto.LoginUserDto;
 import com.projectx.foundit.dto.RegisterUserDto;
 import com.projectx.foundit.dto.VerifyUserDto;
@@ -8,7 +8,6 @@ import com.projectx.foundit.model.User;
 import com.projectx.foundit.responses.LoginResponse;
 import com.projectx.foundit.service.AuthenticationService;
 import com.projectx.foundit.service.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,13 +18,9 @@ public class AthenticationController {
     private final AuthenticationService authenticationService;
 
 
-    @Autowired
-    private final RabbitMQProducer producer;
-
-    public AthenticationController(JwtService jwtService, AuthenticationService authenticationService, RabbitMQProducer producer) {
+    public AthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
-        this.producer = producer;
     }
 
     @PostMapping("/signup")
@@ -42,8 +37,7 @@ public class AthenticationController {
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody LoginUserDto loginUserDto){
         try {
-            User authenticatedUser = authenticationService.authenticate(loginUserDto);
-            String jwtToken = jwtService.generateToken(authenticatedUser);
+            var jwtToken = authenticationService.login(loginUserDto);
             LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
             return ResponseEntity.ok(loginResponse);
         } catch (Exception e) {
@@ -71,9 +65,4 @@ public class AthenticationController {
         }
     }
 
-    @PostMapping("/send")
-    public String sendMessage(@RequestParam String message) {
-        producer.sendMessage(message);
-        return "Message sent: " + message;
-    }
 }
