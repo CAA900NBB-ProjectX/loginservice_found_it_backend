@@ -12,4 +12,5 @@ public interface IUserRepository extends CrudRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
     Optional<User> findByVerificationCode(String verificationCode);
+    User findUserByEmail(String email);
 }
