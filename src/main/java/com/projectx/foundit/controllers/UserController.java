@@ -20,14 +20,27 @@ public class    UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<User> authenticatedUser(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(currentUser);
+    @GetMapping("/getuser")
+    public ResponseEntity<?> getUser(@RequestParam Long userId){
+        try {
+            User currentUser = userService.getUserWithUserId(userId);
+            return ResponseEntity.ok(currentUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    @GetMapping("/")
+    @GetMapping("/getuserbyemail")
+    public ResponseEntity<?> getUser(@RequestParam String email){
+        try {
+            User currentUser = userService.getUserWitEmail(email);
+            return ResponseEntity.ok(currentUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/allusers")
     public ResponseEntity<List<User>> allUsers(){
         List<User> users = userService.allUsers();
         return ResponseEntity.ok(users);
