@@ -21,4 +21,24 @@ public class UserService {
         return users;
     }
 
+    public User getUserWithUserId(Long userId){
+        try {
+            User userdetails = userRepository.findUserById(userId);
+            return new User(userdetails.getUsername(), userdetails.getEmail(), userdetails.getAddress1(), userdetails.getAddress2(), userdetails.getPobox(), userdetails.getCity(), userdetails.getProvince(), userdetails.getCountry(), userdetails.getGender(), userdetails.getPhoneno());
+        } catch (Exception e) {
+            throw new RuntimeException("User is not registered!");
+        }
+    }
+
+    public User getUserWitEmail(String email){
+        try {
+            User userdetails = userRepository.findUserByEmail(email);
+            return new User(userdetails.getUsername(), userdetails.getEmail(), userdetails.getAddress1(), userdetails.getAddress2(), userdetails.getPobox(), userdetails.getCity(), userdetails.getProvince(), userdetails.getCountry(), userdetails.getGender(), userdetails.getPhoneno());
+        } catch (Exception e) {
+            throw new RuntimeException("User is not registered!");
+        }
+    }
+
+
+
 }
