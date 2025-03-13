@@ -138,5 +138,10 @@ Returns a list of all users.
 
 ---
 
+## Graphical view
+
+![login service diagram](https://github.com/user-attachments/assets/5324e3df-9042-4b8c-824a-c9a45ec644d0)
+
+
 
 
