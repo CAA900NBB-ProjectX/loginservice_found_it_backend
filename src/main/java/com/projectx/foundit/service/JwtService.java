@@ -1,5 +1,7 @@
 package com.projectx.foundit.service;
 
+import com.projectx.foundit.model.User;
+import com.projectx.foundit.repository.IUserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -23,6 +25,12 @@ public class JwtService {
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
 
+    private final IUserRepository userRepository;
+
+    public JwtService(IUserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -33,6 +41,10 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
+        HashMap<String, Object> extraClaims = new HashMap<>();
+        User user = userRepository.findUserByEmail(userDetails.getUsername());
+        user = new User(user.getId(), user.getUsername(), user.getEmail());
+        extraClaims.put("user", user);
         return generateToken(new HashMap<>(), userDetails);
     }
 
