@@ -20,8 +20,18 @@ public class    UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/getuser")
+    @GetMapping("/getuserbyid")
     public ResponseEntity<?> getUser(@RequestParam Long userId){
+        try {
+            User currentUser = userService.getUserWithId(userId);
+            return ResponseEntity.ok(currentUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/getuserbyuserid")
+    public ResponseEntity<?> getUserByUserId(@RequestParam String userId){
         try {
             User currentUser = userService.getUserWithUserId(userId);
             return ResponseEntity.ok(currentUser);
@@ -31,7 +41,7 @@ public class    UserController {
     }
 
     @GetMapping("/getuserbyemail")
-    public ResponseEntity<?> getUser(@RequestParam String email){
+    public ResponseEntity<?> getUserByEmail(@RequestParam String email){
         try {
             User currentUser = userService.getUserWitEmail(email);
             return ResponseEntity.ok(currentUser);
