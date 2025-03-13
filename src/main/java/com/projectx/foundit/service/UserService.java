@@ -21,9 +21,18 @@ public class UserService {
         return users;
     }
 
-    public User getUserWithUserId(Long userId){
+    public User getUserWithId(Long userId){
         try {
             User userdetails = userRepository.findUserById(userId);
+            return new User(userdetails.getUsername(), userdetails.getEmail(), userdetails.getAddress1(), userdetails.getAddress2(), userdetails.getPobox(), userdetails.getCity(), userdetails.getProvince(), userdetails.getCountry(), userdetails.getGender(), userdetails.getPhoneno());
+        } catch (Exception e) {
+            throw new RuntimeException("User is not registered!");
+        }
+    }
+
+    public User getUserWithUserId(String userId){
+        try {
+            User userdetails = userRepository.findUserByUserId(userId);
             return new User(userdetails.getUsername(), userdetails.getEmail(), userdetails.getAddress1(), userdetails.getAddress2(), userdetails.getPobox(), userdetails.getCity(), userdetails.getProvince(), userdetails.getCountry(), userdetails.getGender(), userdetails.getPhoneno());
         } catch (Exception e) {
             throw new RuntimeException("User is not registered!");
