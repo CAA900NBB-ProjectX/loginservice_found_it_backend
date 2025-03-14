@@ -18,7 +18,7 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(unique = true, nullable = false)
     private String username;
@@ -63,7 +63,7 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public User(Long id, String username, String email) {
+    public User(int id, String username, String email) {
         this.id = id;
         this.username = username;
         this.email = email;

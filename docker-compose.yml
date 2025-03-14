@@ -11,8 +11,6 @@ services:
       POSTGRES_DB: userdb
     volumes:
       - postgres:/data/postgres
-    ports:
-      - 5433:5432
     networks:
       - foundit-network
     restart: unless-stopped
@@ -24,7 +22,7 @@ services:
     env_file:
       - .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5433/userdb
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresdb:5432/userdb
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
