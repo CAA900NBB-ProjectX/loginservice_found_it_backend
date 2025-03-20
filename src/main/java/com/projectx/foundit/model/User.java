@@ -82,6 +82,20 @@ public class User implements UserDetails {
         this.phoneno = phoneno;
     }
 
+    public User(int id, String username, String email, String address1, String address2, String pobox, String city, String province, String country, String gender, Integer phoneno) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.address1 = address1;
+        this.address2 = address2;
+        this.pobox = pobox;
+        this.city = city;
+        this.province = province;
+        this.country = country;
+        this.gender = gender;
+        this.phoneno = phoneno;
+    }
+
     public User() {
     }
 
