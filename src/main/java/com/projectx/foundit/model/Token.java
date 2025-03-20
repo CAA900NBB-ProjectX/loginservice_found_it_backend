@@ -17,6 +17,7 @@ public class Token {
     @GeneratedValue
     private Integer id;
 
+    @Column(length = 32000)
     private String token;
 
     @Enumerated(EnumType.STRING)
