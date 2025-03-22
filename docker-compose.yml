@@ -16,6 +16,7 @@ services:
     restart: unless-stopped
 
   loginservice:
+    container_name: loginservice
     build :
       context: .
       dockerfile: Dockerfile    
