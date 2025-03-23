@@ -18,6 +18,9 @@ RUN ./gradlew --no-daemon dependencies
 # Copy the source code
 COPY src src
 
+# Copy the .env file
+COPY .env .env
+
 # Build the JAR file
 RUN ./gradlew bootJar --no-daemon
 
