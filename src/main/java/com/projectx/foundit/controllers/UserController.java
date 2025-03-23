@@ -1,7 +1,9 @@
 package com.projectx.foundit.controllers;
 
+import com.projectx.foundit.dto.UserDto;
 import com.projectx.foundit.model.User;
 import com.projectx.foundit.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,5 +55,25 @@ public class    UserController {
     public ResponseEntity<List<User>> allUsers(){
         List<User> users = userService.allUsers();
         return ResponseEntity.ok(users);
+    }
+
+    @PutMapping("/edit")
+    public HttpStatus editUserDetails(@RequestBody UserDto userDetails){
+        try {
+            userService.updateUserData(userDetails);
+            return HttpStatus.OK;
+        } catch (RuntimeException e) {
+            return HttpStatus.BAD_REQUEST;
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public HttpStatus deleteUserDetails(@RequestParam String username){
+        try {
+            userService.deleteUser(username);
+            return HttpStatus.OK;
+        } catch (RuntimeException e) {
+            return HttpStatus.BAD_REQUEST;
+        }
     }
 }
