@@ -18,9 +18,7 @@ services:
 
   loginservice:
     container_name: loginservice
-    build :
-      context: .
-      dockerfile: Dockerfile    
+    image: tharukadk/login-service:01
     env_file:
       - .env
     environment:
@@ -33,7 +31,7 @@ services:
       - postgres
     networks:
       - foundit-network
-    
+
 networks:
   foundit-network:
     driver: bridge
