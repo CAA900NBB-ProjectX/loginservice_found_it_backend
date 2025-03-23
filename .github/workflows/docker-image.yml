@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - github-action-implementation
 
 jobs:
   build:
@@ -19,15 +20,15 @@ jobs:
           echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-          echo "POSTGRES_PASSWORD=${{ secrets.SUPPORT_EMAIL }}" >> .env
-          echo "POSTGRES_PASSWORD=${{ secrets.APP_PASSWORD }}" >> .env
+          echo "SUPPORT_EMAIL=${{ secrets.SUPPORT_EMAIL }}" >> .env
+          echo "APP_PASSWORD=${{ secrets.APP_PASSWORD }}" >> .env
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_USERNAME }}" --password-stdin
 
       - name: Build and Tag Docker Image
         run: |
-          docker build --tag ghcr.io/${{ secrets.GHCR_USERNAME }}/lginservice:latest .
+          docker build --tag ghcr.io/${{ secrets.GHCR_USERNAME }}/loginservice:latest .
 
       - name: Push Docker Image to GitHub Container Registry
         run: docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/loginservice:latest
