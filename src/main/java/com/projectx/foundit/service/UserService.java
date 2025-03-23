@@ -30,9 +30,9 @@ public class UserService {
         }
     }
 
-    public User getUserWithUserId(String userId){
+    public User getUserWithUsername(String username){
         try {
-            User userdetails = userRepository.findUserByUsername(userId);
+            User userdetails = userRepository.findUserByUsername(username);
             return new User(userdetails.getId(), userdetails.getUsername(), userdetails.getEmail(), userdetails.getAddress1(), userdetails.getAddress2(), userdetails.getPobox(), userdetails.getCity(), userdetails.getProvince(), userdetails.getCountry(), userdetails.getGender(), userdetails.getPhoneno());
         } catch (Exception e) {
             throw new RuntimeException("User is not registered!");
